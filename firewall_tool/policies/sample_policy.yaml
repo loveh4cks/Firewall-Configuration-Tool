@@ -1,0 +1,11 @@
+rules:
+  - name: "Allow HTTP"
+    action: "allow"
+    protocol: "tcp"
+    port: 80
+    direction: "inbound"
+  - name: "Block Bad IP"
+    action: "block"
+    protocol: "any"
+    remote_ip: "10.10.10.10"
+    direction: "inbound"

@@ -1,0 +1,41 @@
+rules:
+- name: Block NetBIOS Name Service
+  direction: inbound
+  action: block
+  protocol: UDP
+  port: 137
+- name: Block NetBIOS Datagram Service
+  direction: inbound
+  action: block
+  protocol: UDP
+  port: 138
+- name: Block NetBIOS Session Service
+  direction: inbound
+  action: block
+  protocol: TCP
+  port: 139
+- name: Block SMB
+  direction: inbound
+  action: block
+  protocol: TCP
+  port: 445
+- name: Block Telnet
+  direction: inbound
+  action: block
+  protocol: TCP
+  port: 23
+- name: Block RDP
+  direction: inbound
+  action: block
+  protocol: TCP
+  port: 3389
+- name: Block SSH
+  direction: inbound
+  action: block
+  protocol: TCP
+  port: 22
+- name: Block YouTube (Sample)
+  direction: outbound
+  action: block
+  protocol: TCP
+  remote_ip: 173.194.0.0/16
