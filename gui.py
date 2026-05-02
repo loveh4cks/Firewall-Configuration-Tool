@@ -29,7 +29,10 @@ from firewall_tool.platforms.linux_firewall import LinuxFirewallManager
 # ─────────────────────────────────────────────
 def is_admin():
     try:
-        return ctypes.windll.shell32.IsUserAnAdmin() != 0
+        if platform.system() == "Windows":
+            return ctypes.windll.shell32.IsUserAnAdmin() != 0
+        else:
+            return os.geteuid() == 0
     except Exception:
         return False
 
@@ -38,10 +41,13 @@ def run_as_admin_with_state():
     try:
         script = os.path.abspath(__file__)
         # The session is already saved by the caller before this function is invoked
-        ctypes.windll.shell32.ShellExecuteW(
-            None, "runas", sys.executable, f'"{script}"', None, 1
-        )
-        sys.exit(0)
+        if platform.system() == "Windows":
+            ctypes.windll.shell32.ShellExecuteW(
+                None, "runas", sys.executable, f'"{script}"', None, 1
+            )
+            sys.exit(0)
+        else:
+            os.execlp("pkexec", "pkexec", sys.executable, script)
     except Exception as e:
         messagebox.showerror("Elevation Failed", f"Could not get admin privileges:\n{e}")
 
