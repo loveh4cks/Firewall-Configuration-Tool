@@ -47,7 +47,9 @@ def run_as_admin_with_state():
             )
             sys.exit(0)
         else:
-            os.execlp("pkexec", "pkexec", sys.executable, script)
+            display = os.environ.get('DISPLAY', ':0')
+            xauth = os.environ.get('XAUTHORITY', '')
+            os.execlp("pkexec", "pkexec", "env", f"DISPLAY={display}", f"XAUTHORITY={xauth}", sys.executable, script)
     except Exception as e:
         messagebox.showerror("Elevation Failed", f"Could not get admin privileges:\n{e}")
 
