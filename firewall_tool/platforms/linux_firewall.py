@@ -57,7 +57,7 @@ class LinuxFirewallManager(FirewallManager):
         action_map = {"allow": "ACCEPT", "block": "DROP"}
         action = action_map.get(rule.get('action', 'allow').lower(), "ACCEPT")
 
-        cmd = ["iptables", "-A", chain]
+        cmd = ["/usr/sbin/iptables", "-A", chain]
 
         protocol = rule.get('protocol', 'tcp').lower()
         has_port = 'port' in rule and str(rule.get('port', '')).strip()
@@ -92,7 +92,7 @@ class LinuxFirewallManager(FirewallManager):
         for chain in ["INPUT", "OUTPUT", "FORWARD"]:
             # Get rules with line numbers
             ok, output = self._execute_command(
-                ["iptables", "-L", chain, "--line-numbers", "-n"]
+                ["/usr/sbin/iptables", "-L", chain, "--line-numbers", "-n"]
             )
             if not ok:
                 continue
@@ -109,7 +109,7 @@ class LinuxFirewallManager(FirewallManager):
             # Delete in reverse order so line numbers don't shift
             for line_num in sorted(lines_to_delete, reverse=True):
                 ok, msg = self._execute_command(
-                    ["iptables", "-D", chain, str(line_num)]
+                    ["/usr/sbin/iptables", "-D", chain, str(line_num)]
                 )
                 if not ok:
                     success = False
@@ -147,7 +147,7 @@ class LinuxFirewallManager(FirewallManager):
 
         for chain, direction in [("INPUT", "Inbound"), ("OUTPUT", "Outbound"), ("FORWARD", "Forward")]:
             ok, output = self._execute_command(
-                ["iptables", "-L", chain, "-n", "-v", "--line-numbers"]
+                ["/usr/sbin/iptables", "-L", chain, "-n", "-v", "--line-numbers"]
             )
             if not ok or not output:
                 continue
